@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Penaltis ⚽</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top, #0d2137 0%, #0a1020 60%, #060c14 100%);
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 40px rgba(255,200,50,0.5);
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+
+  /* LOBBY */
+  #lobby { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+  .ws-input {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .ws-input input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    width: 240px;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .ws-input input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .btn-connect {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+  }
+
+  .role-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn-role {
+    border: none;
+    color: white;
+    padding: 22px 44px;
+    border-radius: 18px;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: 1px;
+    transition: transform 0.15s, filter 0.15s;
+  }
+
+  .btn-role:hover { transform: translateY(-3px); filter: brightness(1.15); }
+  .btn-role:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .btn-shooter { background: linear-gradient(135deg, #f5a623, #e8531a); box-shadow: 0 8px 32px rgba(245,166,35,0.35); }
+  .btn-keeper  { background: linear-gradient(135deg, #21c0f5, #1a6ae8); box-shadow: 0 8px 32px rgba(33,192,245,0.35); }
+
+  /* GAME */
+  #game { display: none; width: 100%; max-width: 400px; text-align: center; }
+
+  .role-badge {
+    display: inline-block;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .role-badge.shooter { background: rgba(245,166,35,0.2); border: 1px solid rgba(245,166,35,0.5); color: #f5a623; }
+  .role-badge.keeper  { background: rgba(33,192,245,0.2); border: 1px solid rgba(33,192,245,0.5); color: #21c0f5; }
+
+  .scoreboard {
+    display: flex;
+    gap: 0;
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 16px 0;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .score-col { flex: 1; text-align: center; }
+  .score-col + .score-col { border-left: 1px solid rgba(255,255,255,0.15); }
+  .score-num { font-family: 'Bebas Neue', sans-serif; font-size: 48px; line-height: 1; }
+  .score-num.shooter { color: #f5a623; }
+  .score-num.keeper  { color: #21c0f5; }
+  .score-label { font-size: 10px; letter-spacing: 2px; opacity: 0.4; text-transform: uppercase; margin-top: 2px; }
+
+  .status {
+    font-size: 18px;
+    font-weight: 700;
+    min-height: 28px;
+    margin-bottom: 24px;
+    transition: color 0.3s;
+  }
+
+  .status.goal  { color: #f5a623; text-shadow: 0 0 20px rgba(245,166,35,0.6); }
+  .status.saved { color: #21c0f5; text-shadow: 0 0 20px rgba(33,192,245,0.6); }
+
+  /* GOAL GRID */
+  .goal-wrapper { position: relative; width: 100%; margin-bottom: 20px; }
+
+  .goal-frame {
+    position: relative;
+    width: 100%;
+    padding-top: 62%;
+    background: rgba(255,255,255,0.04);
+    border: 3px solid rgba(255,255,255,0.35);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .goal-grid {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 2px;
+    padding: 2px;
+  }
+
+  .goal-cell {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .goal-cell:hover:not(:disabled) { background: rgba(255,255,255,0.15); }
+  .goal-cell:disabled { cursor: default; }
+  .goal-cell.shot    { background: rgba(245,166,35,0.4); border-color: #f5a623; }
+  .goal-cell.save    { background: rgba(33,192,245,0.4); border-color: #21c0f5; }
+  .goal-cell.goal-in { background: rgba(245,166,35,0.5); }
+  .goal-cell.hint-ball { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); animation: hintPulse 0.3s ease; }
+
+  @keyframes hintPulse {
+    0%   { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
+  }
+
+  .ball-icon { font-size: 24px; animation: popIn 0.4s ease; }
+
+  @keyframes popIn {
+    0%   { transform: scale(0); opacity: 0; }
+    70%  { transform: scale(1.3); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* BUTTONS GRID */
+  .sector-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .btn-sector {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 10px;
+    padding: 14px 0;
+    font-size: 22px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .btn-sector:hover:not(:disabled) { background: rgba(255,255,255,0.18); transform: scale(1.05); }
+  .btn-sector:disabled { opacity: 0.35; cursor: default; }
+
+  .btn-next {
+    background: linear-gradient(135deg, #21c0f5, #1a6ae8);
+    border: none;
+    color: white;
+    padding: 14px 36px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 4px 20px rgba(33,192,245,0.4);
+    margin-bottom: 16px;
+    transition: transform 0.15s;
+  }
+
+  .btn-next:hover { transform: translateY(-2px); }
+
+  .btn-reset {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* Dots */
+  .dots { display: flex; gap: 6px; justify-content: center; margin: 8px 0; }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    animation: pulse 1.2s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.3s; }
+  .dot:nth-child(3) { animation-delay: 0.6s; }
+
+  @keyframes pulse {
+    0%,100% { opacity: 0.3; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.4); }
+  }
+
+  .connection-status {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+
+  .connection-status.connected    { background: rgba(50,220,100,0.15); color: #32dc64; border: 1px solid rgba(50,220,100,0.3); }
+  .connection-status.disconnected { background: rgba(220,50,50,0.15);  color: #dc3232; border: 1px solid rgba(220,50,50,0.3); }
+  .connection-status.connecting   { background: rgba(245,166,35,0.15); color: #f5a623; border: 1px solid rgba(245,166,35,0.3); }
+
+  /* GAME OVER SCREEN */
+  #gameOver {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .result-emoji { font-size: 100px; margin-bottom: 16px; animation: bounceIn 0.6s ease; }
+
+  @keyframes bounceIn {
+    0%   { transform: scale(0); opacity: 0; }
+    60%  { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .result-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .result-title.winner { color: #f5a623; text-shadow: 0 0 40px rgba(245,166,35,0.6); }
+  .result-title.loser  { color: #dc3232; text-shadow: 0 0 40px rgba(220,50,50,0.4); }
+
+  .result-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+  }
+
+  .btn-play-again {
+    background: linear-gradient(135deg, #f5a623, #e8531a);
+    border: none;
+    color: white;
+    padding: 18px 48px;
+    border-radius: 16px;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 8px 32px rgba(245,166,35,0.4);
+    transition: transform 0.15s;
+  }
+
+  .btn-play-again:hover { transform: translateY(-3px); }
+
+  /* Countdown para portero */
+  .countdown-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .countdown-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f5a623, #e8531a);
+    border-radius: 3px;
+    transition: width linear;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOBBY -->
+<div id="lobby">
+  <h1>⚽ PENALTIS</h1>
+  <p class="subtitle">Multijugador en red local</p>
+
+  <div class="ws-input">
+    <input type="text" id="serverIp" placeholder="IP del servidor (ej: 192.168.1.5)" value="192.168.100.180"/>
+    <button class="btn-connect" onclick="conectar()">Conectar</button>
+  </div>
+
+  <div id="connStatus" class="connection-status connecting">Desconectado</div>
+
+  <div class="role-buttons">
+    <button class="btn-role btn-shooter" id="btnShooter" onclick="joinAs('shooter')" disabled>🦵 SOY EL TIRADOR</button>
+    <button class="btn-role btn-keeper"  id="btnKeeper"  onclick="joinAs('goalkeeper')" disabled>🧤 SOY EL PORTERO</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game">
+  <div id="roleBadge" class="role-badge"></div>
+
+  <div class="scoreboard">
+    <div class="score-col">
+      <div class="score-num shooter" id="scoreShooter">0</div>
+      <div class="score-label">🦵 Goles</div>
+    </div>
+    <div class="score-col">
+      <div class="score-num keeper" id="scoreKeeper">0</div>
+      <div class="score-label">🧤 Atajadas</div>
+    </div>
+  </div>
+
+  <div id="status" class="status">Esperando...</div>
+
+  <!-- Countdown bar (solo visible para portero en shot_fired) -->
+  <div class="countdown-bar" id="countdownBar" style="display:none">
+    <div class="countdown-fill" id="countdownFill" style="width:100%"></div>
+  </div>
+
+  <div class="goal-wrapper">
+    <div class="goal-frame">
+      <div class="goal-grid" id="goalGrid"></div>
+    </div>
+  </div>
+
+  <div class="sector-buttons" id="sectorButtons"></div>
+
+  <div class="dots" id="waitingDots" style="display:none">
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+
+  <button class="btn-next" id="btnNext" onclick="nextRound()" style="display:none">Siguiente Ronda →</button>
+  <br/>
+  <button class="btn-reset" onclick="resetGame()">Reiniciar juego</button>
+</div>
+
+<!-- GAME OVER -->
+<div id="gameOver">
+  <div class="result-emoji" id="resultEmoji"></div>
+  <div class="result-title" id="resultTitle"></div>
+  <div class="result-sub" id="resultSub"></div>
+  <button class="btn-play-again" onclick="resetGame()">🔄 Jugar de nuevo</button>
+</div>
+
+<script>
+const SECTORS = [
+  { id: "top-left",   label: "↖" },
+  { id: "top-center", label: "↑" },
+  { id: "top-right",  label: "↗" },
+  { id: "mid-left",   label: "←" },
+  { id: "mid-center", label: "•" },
+  { id: "mid-right",  label: "→" },
+  { id: "bot-left",   label: "↙" },
+  { id: "bot-center", label: "↓" },
+  { id: "bot-right",  label: "↘" },
+];
+
+const WIN_SCORE = 3;
+const TIMEOUT = 1000;  // ms para reaccionar
+
+let ws = null;
+let myRole = null;
+let state = null;
+let localChoice = null;
+let hintTimeout = null;
+let canSaveNow = false;
+
+// Build goal grid
+const goalGrid = document.getElementById("goalGrid");
+SECTORS.forEach(s => {
+  const cell = document.createElement("div");
+  cell.className = "goal-cell";
+  cell.id = "cell-" + s.id;
+  goalGrid.appendChild(cell);
+});
+
+// Build sector buttons
+const sectorButtons = document.getElementById("sectorButtons");
+SECTORS.forEach(s => {
+  const btn = document.createElement("button");
+  btn.className = "btn-sector";
+  btn.id = "btn-" + s.id;
+  btn.textContent = s.label;
+  btn.disabled = true;
+  btn.onclick = () => handleSectorClick(s.id);
+  sectorButtons.appendChild(btn);
+});
+
+function conectar() {
+  const ip = document.getElementById("serverIp").value.trim() || "localhost";
+  const url = `ws://${ip}:3001`;
+  setConnStatus("connecting", "Conectando...");
+  if (ws) { ws.close(); ws = null; }
+  ws = new WebSocket(url);
+
+  ws.onopen = () => {
+    setConnStatus("connected", "✓ Conectado");
+    document.getElementById("btnShooter").disabled = false;
+    document.getElementById("btnKeeper").disabled = false;
+  };
+
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === "state") handleState(msg.state, msg.roles);
+    if (msg.type === "error") alert(msg.message);
+  };
+
+  ws.onclose = () => {
+    setConnStatus("disconnected", "✗ Desconectado");
+    document.getElementById("btnShooter").disabled = true;
+    document.getElementById("btnKeeper").disabled = true;
+  };
+
+  ws.onerror = () => setConnStatus("disconnected", "✗ Error de conexión");
+}
+
+function setConnStatus(cls, text) {
+  const el = document.getElementById("connStatus");
+  el.className = "connection-status " + cls;
+  el.textContent = text;
+}
+
+function joinAs(role) {
+  myRole = role;
+  ws.send(JSON.stringify({ type: "join", role }));
+  document.getElementById("lobby").style.display = "none";
+  document.getElementById("game").style.display = "block";
+  const badge = document.getElementById("roleBadge");
+  badge.className = "role-badge " + (role === "shooter" ? "shooter" : "keeper");
+  badge.textContent = role === "shooter" ? "🦵 TIRADOR" : "🧤 PORTERO";
+}
+
+function handleSectorClick(sectorId) {
+  if (!state || localChoice) return;
+  if (myRole === "shooter" && state.phase === "shooter_ready") {
+    localChoice = sectorId;
+    ws.send(JSON.stringify({ type: "shoot", sector: sectorId }));
+  } else if (myRole === "goalkeeper" && state.phase === "shot_fired" && canSaveNow) {
+    localChoice = sectorId;
+    ws.send(JSON.stringify({ type: "save", sector: sectorId }));
+  }
+}
+
+function nextRound() {
+  ws.send(JSON.stringify({ type: "next_round" }));
+  localChoice = null;
+  canSaveNow = false;
+  if (hintTimeout) { clearTimeout(hintTimeout); hintTimeout = null; }
+}
+
+function resetGame() {
+  ws.send(JSON.stringify({ type: "reset" }));
+  localChoice = null;
+  canSaveNow = false;
+  if (hintTimeout) { clearTimeout(hintTimeout); hintTimeout = null; }
+
+  document.getElementById("lobby").style.display = "flex";
+  document.getElementById("game").style.display = "none";
+  document.getElementById("gameOver").style.display = "none";
+  myRole = null;
+}
+
+function showGameOver(won) {
+  document.getElementById("game").style.display = "none";
+  document.getElementById("gameOver").style.display = "flex";
+
+  const emoji = document.getElementById("resultEmoji");
+  const title = document.getElementById("resultTitle");
+  const sub   = document.getElementById("resultSub");
+
+  if (won) {
+    emoji.textContent = "🏆";
+    title.textContent = "¡GANADOR!";
+    title.className = "result-title winner";
+    sub.textContent = "¡Felicidades, dominaste el partido!";
+  } else {
+    emoji.textContent = "😔";
+    title.textContent = "PERDEDOR";
+    title.className = "result-title loser";
+    sub.textContent = "Mejor suerte la próxima vez...";
+  }
+}
+
+function checkGameOver(scores) {
+  if (scores.shooter >= WIN_SCORE) {
+    const won = myRole === "shooter";
+    setTimeout(() => showGameOver(won), 1800);
+    return true;
+  }
+  if (scores.goalkeeper >= WIN_SCORE) {
+    const won = myRole === "goalkeeper";
+    setTimeout(() => showGameOver(won), 1800);
+    return true;
+  }
+  return false;
+}
+
+function startGoalkeeperHint(shooterSector) {
+  canSaveNow = true;
+  SECTORS.forEach(s => {
+    document.getElementById("btn-" + s.id).disabled = false;
+  });
+  document.getElementById("status").textContent = "¡ATAJA AHORA!";
+}
+
+function handleState(newState, roles) {
+  const prevPhase = state ? state.phase : null;
+  state = newState;
+
+  document.getElementById("scoreShooter").textContent = state.scores.shooter;
+  document.getElementById("scoreKeeper").textContent  = state.scores.goalkeeper;
+
+  const statusEl = document.getElementById("status");
+  const dotsEl   = document.getElementById("waitingDots");
+  const btnNext  = document.getElementById("btnNext");
+  const bar      = document.getElementById("countdownBar");
+
+  // Reset grid
+  SECTORS.forEach(s => {
+    const cell = document.getElementById("cell-" + s.id);
+    cell.className = "goal-cell";
+    cell.innerHTML = "";
+  });
+
+  // Disable all buttons by default
+  SECTORS.forEach(s => document.getElementById("btn-" + s.id).disabled = true);
+
+  dotsEl.style.display = "none";
+  btnNext.style.display = "none";
+  bar.style.display = "none";
+  statusEl.className = "status";
+
+  // Reset localChoice when a new round starts
+  if (state.phase === "shooter_ready" && prevPhase === "result") {
+    localChoice = null;
+    canSaveNow = false;
+  }
+  if (state.phase === "shooter_ready" && prevPhase === "waiting") {
+    localChoice = null;
+    canSaveNow = false;
+  }
+
+  if (state.phase === "waiting") {
+    const missing = !roles.shooterConnected || !roles.goalkeeperConnected;
+    statusEl.textContent = missing ? "Esperando al otro jugador..." : "Listos para jugar";
+    dotsEl.style.display = "flex";
+    return;
+  }
+
+  if (state.phase === "shooter_ready") {
+    if (myRole === "shooter") {
+      statusEl.textContent = "¡Elige dónde tirar!";
+      SECTORS.forEach(s => document.getElementById("btn-" + s.id).disabled = (localChoice !== null));
+    } else {
+      statusEl.textContent = "El tirador está eligiendo...";
+      dotsEl.style.display = "flex";
+    }
+    return;
+  }
+
+  if (state.phase === "shot_fired") {
+    if (myRole === "goalkeeper") {
+      // Show hint then enable buttons after delay
+      if (!localChoice && !canSaveNow && prevPhase !== "shot_fired") {
+        statusEl.textContent = "¡Mira dónde va el balón!";
+        startGoalkeeperHint(state.shooterChoice);
+      } else if (canSaveNow && !localChoice) {
+        statusEl.textContent = "¡ATAJA AHORA!";
+        SECTORS.forEach(s => document.getElementById("btn-" + s.id).disabled = false);
+      } else {
+        statusEl.textContent = localChoice ? "Esperando resultado..." : "¡Mira dónde va el balón!";
+      }
+    } else {
+      statusEl.textContent = "Esperando al portero...";
+      dotsEl.style.display = "flex";
+    }
+    return;
+  }
+
+  if (state.phase === "result") {
+    if (hintTimeout) { clearTimeout(hintTimeout); hintTimeout = null; }
+    bar.style.display = "none";
+
+    const isGoal = state.result === "goal";
+
+    if (state.shooterChoice) {
+      const sc = document.getElementById("cell-" + state.shooterChoice);
+      sc.innerHTML = '<span class="ball-icon">⚽</span>';
+      sc.classList.add(isGoal ? "goal-in" : "shot");
+    }
+    if (state.goalkeeperChoice) {
+      const gc = document.getElementById("cell-" + state.goalkeeperChoice);
+      gc.classList.add("save");
+      if (!isGoal) gc.innerHTML += '<span style="font-size:20px">🧤</span>';
+    }
+
+    if (myRole === "shooter") {
+      statusEl.textContent = isGoal ? "🎉 ¡GOOOOOL!" : "🧤 ¡Lo atajó!";
+    } else {
+      statusEl.textContent = isGoal ? "💥 ¡Te metieron gol!" : "🙌 ¡Lo atajaste!";
+    }
+
+    statusEl.className = "status " + (isGoal ? "goal" : "saved");
+    localChoice = null;
+    canSaveNow = false;
+
+    // Check if game over
+    const isOver = checkGameOver(state.scores);
+    if (!isOver) {
+      btnNext.style.display = "inline-block";
+    }
+  }
+}
+
+window.onload = () => conectar();
+</script>
+</body>
+</html>
