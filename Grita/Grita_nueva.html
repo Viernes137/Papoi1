@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gritá Producciones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Barlow+Condensed:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f2f0ea;
+      --yellow: #f0c000;
+      --gray-dark: #1a1a1a;
+      --gray-mid: #2e2e2e;
+      --gray-light: #888;
+      --border: 1px solid #2e2e2e;
+      --border-light: 1px solid #444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+      cursor: crosshair;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      padding: 0 2rem;
+      height: 60px;
+      background: var(--black);
+      border-bottom: var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.15em;
+      color: var(--yellow);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0 1.4rem;
+      height: 60px;
+      line-height: 60px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      text-decoration: none;
+      border-left: var(--border);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--yellow); background: var(--gray-dark); }
+
+    .nav-ig a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--gray-light);
+      text-decoration: none;
+      border-left: var(--border);
+      padding-left: 1.4rem;
+      transition: color 0.2s;
+    }
+    .nav-ig a:hover { color: var(--yellow); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding-top: 60px;
+      border-bottom: var(--border);
+    }
+
+    .hero-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: var(--border);
+    }
+
+    .hero-left {
+      padding: 4rem 3rem;
+      border-right: var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .hero-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 10vw, 11rem);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
+      color: var(--white);
+    }
+
+    .hero-headline span {
+      display: block;
+      color: var(--yellow);
+    }
+
+    .hero-subline {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      line-height: 1.8;
+      color: var(--gray-light);
+      max-width: 320px;
+      margin-top: 3rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-right {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+      position: relative;
+    }
+
+    .hero-logo-box img {
+      width: 70%;
+      filter: invert(1);
+      mix-blend-mode: normal;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* grid lines decorative */
+    .hero-logo-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--gray-dark) 1px, transparent 1px),
+        linear-gradient(90deg, var(--gray-dark) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.6;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: var(--border);
+    }
+
+    .stat {
+      padding: 1.5rem 2rem;
+      border-right: var(--border);
+    }
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      color: var(--yellow);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      color: var(--gray-light);
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* hero bottom bar */
+    .hero-ticker {
+      overflow: hidden;
+      padding: 0.8rem 0;
+      background: var(--yellow);
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 3rem;
+      animation: ticker 20s linear infinite;
+      white-space: nowrap;
+      width: max-content;
+    }
+
+    .ticker-track span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--black);
+    }
+
+    .ticker-track span.dot {
+      color: var(--black);
+      opacity: 0.4;
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─── NOSOTROS ─── */
+    #nosotros {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      border-bottom: var(--border);
+      min-height: 380px;
+    }
+
+    .section-label {
+      padding: 3rem 2rem;
+      border-right: var(--border);
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nosotros-content {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .nosotros-content h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 1;
+      margin-bottom: 2rem;
+    }
+
+    .nosotros-content p {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: var(--gray-light);
+      max-width: 680px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+    }
+
+    /* ─── SERVICIOS ─── */
+    #servicios {
+      border-bottom: var(--border);
+    }
+
+    .servicios-header {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      border-bottom: var(--border);
+      height: 80px;
+    }
+
+    .servicios-header .section-label {
+      writing-mode: horizontal-tb;
+      transform: none;
+      padding: 0 2rem;
+      height: 80px;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .servicios-count {
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--gray-light);
+      letter-spacing: 0.15em;
+    }
+
+    .servicios-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    .servicio-card {
+      padding: 3rem 2rem;
+      border-right: var(--border);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+
+    .servicio-card:last-child { border-right: none; }
+
+    .servicio-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 3px;
+      background: var(--yellow);
+      transition: width 0.4s ease;
+    }
+
+    .servicio-card:hover { background: var(--gray-dark); }
+    .servicio-card:hover::after { width: 100%; }
+
+    .serv-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--yellow);
+      letter-spacing: 0.2em;
+      margin-bottom: 2rem;
+    }
+
+    .serv-icon {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      filter: grayscale(1) brightness(2);
+    }
+
+    .serv-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .serv-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      line-height: 1.9;
+      color: var(--gray-light);
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── GALERIA ─── */
+    #galeria {
+      border-bottom: var(--border);
+    }
+
+    .galeria-header {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      border-bottom: var(--border);
+      height: 80px;
+    }
+
+    .galeria-header .section-label {
+      writing-mode: horizontal-tb;
+      transform: none;
+      padding: 0 2rem;
+      height: 80px;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 280px 280px;
+    }
+
+    .galeria-item {
+      border-right: var(--border);
+      border-bottom: var(--border);
+      background: var(--gray-dark);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .galeria-item:nth-child(4n) { border-right: none; }
+    .galeria-item:nth-child(n+5) { border-bottom: none; }
+
+    /* spanning items */
+    .galeria-item:nth-child(1) {
+      grid-column: span 2;
+      background: var(--gray-mid);
+    }
+
+    .galeria-item:nth-child(5) {
+      grid-column: span 2;
+    }
+
+    .galeria-item-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .galeria-item:hover .galeria-item-inner { opacity: 1; }
+
+    .galeria-item-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow);
+      text-transform: uppercase;
+    }
+
+    .galeria-item-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+    }
+
+    /* placeholder visuals */
+    .galeria-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .galeria-placeholder svg {
+      opacity: 0.06;
+    }
+
+    /* ─── CONTACTO ─── */
+    #contacto {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: var(--border);
+    }
+
+    .contacto-left {
+      padding: 5rem 4rem;
+      border-right: var(--border);
+    }
+
+    .contacto-left h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 7rem);
+      line-height: 0.9;
+      margin-bottom: 3rem;
+    }
+
+    .contacto-left h2 span {
+      display: block;
+      color: var(--yellow);
+    }
+
+    .contacto-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .contacto-link {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      align-items: center;
+      padding: 1.2rem 0;
+      border-top: var(--border);
+      text-decoration: none;
+      color: var(--white);
+      transition: color 0.2s;
+    }
+
+    .contacto-link:last-child { border-bottom: var(--border); }
+    .contacto-link:hover { color: var(--yellow); }
+
+    .cl-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: var(--gray-light);
+      text-transform: uppercase;
+    }
+
+    .cl-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+
+    .cl-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+
+    .contacto-link:hover .cl-arrow { transform: translateX(4px); }
+
+    /* ─── FORM ─── */
+    .contacto-right {
+      padding: 5rem 4rem;
+    }
+
+    .form-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+    }
+
+    .form-story {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 300;
+      line-height: 2.2;
+      color: var(--white);
+      letter-spacing: 0.02em;
+    }
+
+    .form-story input[type="text"] {
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--gray-light);
+      color: var(--yellow);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      width: 160px;
+      padding: 0 4px 2px;
+      outline: none;
+      transition: border-color 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .form-story input[type="text"]::placeholder { color: var(--gray-mid); }
+    .form-story input[type="text"]:focus { border-color: var(--yellow); }
+
+    .form-story input.wide { width: 220px; }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding: 1rem 2.5rem;
+      background: var(--yellow);
+      color: var(--black);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.2em;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-submit:hover { background: var(--white); transform: translateX(4px); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      border-top: var(--border);
+    }
+
+    .footer-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--yellow);
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--gray-light);
+      letter-spacing: 0.1em;
+      text-align: center;
+    }
+
+    .footer-ig {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--gray-light);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-ig:hover { color: var(--yellow); }
+
+    /* ─── SCROLL ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .hero-main { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-stats { grid-template-columns: repeat(3, 1fr); }
+      #nosotros { grid-template-columns: 1fr; }
+      .section-label { writing-mode: horizontal-tb; transform: none; border-right: none; border-bottom: var(--border); height: 50px; justify-content: flex-start; }
+      .servicios-grid { grid-template-columns: repeat(2, 1fr); }
+      .galeria-grid { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 200px); }
+      .galeria-item:nth-child(1), .galeria-item:nth-child(5) { grid-column: span 1; }
+      #contacto { grid-template-columns: 1fr; }
+      .contacto-left { border-right: none; border-bottom: var(--border); }
+      footer { grid-template-columns: 1fr; text-align: center; gap: 0.5rem; }
+      .nav-links { display: none; }
+      .servicios-header { grid-template-columns: 1fr; }
+      .galeria-header { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">GRITÁ</a>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <div class="nav-ig">
+    <a href="https://www.instagram.com/gritaproducciones/" target="_blank">@gritaproducciones ↗</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-main">
+    <div class="hero-left reveal">
+      <div>
+        <div class="hero-tag">/ Productora Creativa — CDMX — Est. MX</div>
+        <h1 class="hero-headline">
+          HACEMOS<br>
+          <span>GRITAR</span>
+          TUS IDEAS
+        </h1>
+      </div>
+      <p class="hero-subline">
+        PRODUCTORA 100% MEXICANA ESPECIALIZADA<br>
+        EN DAR VIDA A IDEAS DE MANERA CREATIVA.<br>
+        EQUIPO COMPROMETIDO. RESULTADOS QUE SUPERAN.
+      </p>
+    </div>
+
+    <div class="hero-right">
+      <div class="hero-logo-box">
+        <img src="recursos/gritaa.jpeg" alt="Gritá Producciones" />
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Mexicana</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">5+</div>
+          <div class="stat-label">Servicios</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Creatividad</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-ticker">
+    <div class="ticker-track">
+      <span>PRODUCCIÓN CREATIVA</span><span class="dot">◆</span>
+      <span>FOTOGRAFÍA</span><span class="dot">◆</span>
+      <span>VIDEO</span><span class="dot">◆</span>
+      <span>DISEÑO GRÁFICO</span><span class="dot">◆</span>
+      <span>BRANDING</span><span class="dot">◆</span>
+      <span>PRODUCCIÓN CREATIVA</span><span class="dot">◆</span>
+      <span>FOTOGRAFÍA</span><span class="dot">◆</span>
+      <span>VIDEO</span><span class="dot">◆</span>
+      <span>DISEÑO GRÁFICO</span><span class="dot">◆</span>
+      <span>BRANDING</span><span class="dot">◆</span>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="section-label">Nosotros</div>
+  <div class="nosotros-content reveal">
+    <h2>SOMOS LA VOZ<br>QUE TU MARCA<br>NECESITA.</h2>
+    <p>
+      Somos una productora 100% mexicana especializada en dar vida a tus ideas de manera creativa.
+      Contamos con un equipo altamente capacitado y personal comprometido, dispuesto a superar
+      las expectativas de cada uno de nuestros clientes. Desde la concepción hasta la entrega,
+      ejecutamos con precisión y pasión.
+    </p>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="servicios-header">
+    <div class="section-label">Servicios</div>
+    <div class="servicios-count">05 DISCIPLINAS / RESULTADOS SIN LÍMITE</div>
+  </div>
+
+  <div class="servicios-grid">
+    <div class="servicio-card reveal">
+      <div class="serv-num">01</div>
+      <div class="serv-icon">◉</div>
+      <div class="serv-title">FOTOGRAFÍA<br>COMERCIAL</div>
+      <div class="serv-desc">IMAGEN DE PRODUCTO<br>RETRATO DE MARCA<br>EDITORIAL</div>
+    </div>
+    <div class="servicio-card reveal">
+      <div class="serv-num">02</div>
+      <div class="serv-icon">▶</div>
+      <div class="serv-title">PRODUCCIÓN<br>DE VIDEO</div>
+      <div class="serv-desc">SPOTS PUBLICITARIOS<br>CORPORATIVO<br>REDES SOCIALES</div>
+    </div>
+    <div class="servicio-card reveal">
+      <div class="serv-num">03</div>
+      <div class="serv-icon">◈</div>
+      <div class="serv-title">DISEÑO<br>GRÁFICO</div>
+      <div class="serv-desc">IDENTIDAD VISUAL<br>MATERIALES IMPRESOS<br>DIGITAL</div>
+    </div>
+    <div class="servicio-card reveal">
+      <div class="serv-num">04</div>
+      <div class="serv-icon">⬡</div>
+      <div class="serv-title">ESTRATEGIA<br>CREATIVA</div>
+      <div class="serv-desc">CONCEPTO<br>DIRECCIÓN DE ARTE<br>CAMPAÑA INTEGRAL</div>
+    </div>
+    <div class="servicio-card reveal">
+      <div class="serv-num">05</div>
+      <div class="serv-icon">◎</div>
+      <div class="serv-title">BRANDING<br>& MARCA</div>
+      <div class="serv-desc">NAMING<br>IDENTIDAD COMPLETA<br>MANUAL DE MARCA</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section id="galeria">
+  <div class="galeria-header">
+    <div class="section-label">Galería</div>
+    <div class="servicios-count">TRABAJOS SELECCIONADOS / 2024–2025</div>
+  </div>
+
+  <div class="galeria-grid">
+    <div class="galeria-item reveal">
+      <div class="galeria-placeholder">
+        <svg width="120" height="120" viewBox="0 0 120 120" fill="white">
+          <rect x="10" y="10" width="100" height="100" rx="4" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="60" cy="60" r="25" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="85" cy="35" r="8" fill="white"/>
+        </svg>
+      </div>
+      <div class="galeria-item-inner">
+        <div class="galeria-item-label">Fotografía</div>
+        <div class="galeria-item-title">CAMPAÑA PRODUCTO 01</div>
+      </div>
+    </div>
+    <div class="galeria-item reveal">
+      <div class="galeria-placeholder">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <polygon points="10,70 40,10 70,70" fill="none" stroke="white" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="galeria-item-inner">
+        <div class="galeria-item-label">Video</div>
+        <div class="galeria-item-title">SPOT CORPORATIVO</div>
+      </div>
+    </div>
+    <div class="galeria-item reveal">
+      <div class="galeria-placeholder">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <rect x="5" y="5" width="30" height="70" rx="2" fill="white" opacity="0.5"/>
+          <rect x="45" y="5" width="30" height="50" rx="2" fill="white" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="galeria-item-inner">
+        <div class="galeria-item-label">Diseño</div>
+        <div class="galeria-item-title">BRANDING INTEGRAL</div>
+      </div>
+    </div>
+    <div class="galeria-item reveal">
+      <div class="galeria-placeholder">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <circle cx="40" cy="40" r="35" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="40" cy="40" r="20" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="40" cy="40" r="5" fill="white"/>
+        </svg>
+      </div>
+      <div class="galeria-item-inner">
+        <div class="galeria-item-label">Dirección de Arte</div>
+        <div class="galeria-item-title">EDITORIAL FASHION</div>
+      </div>
+    </div>
+    <div class="galeria-item reveal">
+      <div class="galeria-placeholder">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <rect x="5" y="5" width="70" height="70" rx="2" fill="none" stroke="white" stroke-width="3"/>
+          <line x1="5" y1="40" x2="75" y2="40" stroke="white" stroke-width="3"/>
+          <line x1="40" y1="5" x2="40" y2="75" stroke="white" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="galeria-item-inner">
+        <div class="galeria-item-label">Campaña</div>
+        <div class="galeria-item-title">ESTRATEGIA 360°</div>
+      </div>
+    </div>
+    <div class="galeria-item reveal">
+      <div class="galeria-placeholder">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <path d="M40 5 L75 25 L75 55 L40 75 L5 55 L5 25 Z" fill="none" stroke="white" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="galeria-item-inner">
+        <div class="galeria-item-label">Video</div>
+        <div class="galeria-item-title">REDES SOCIALES</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contacto-left reveal">
+    <h2>
+      HABLEMOS<br>
+      <span>DE TU</span>
+      PROYECTO.
+    </h2>
+    <div class="contacto-links">
+      <a class="contacto-link" href="tel:5511554685">
+        <span class="cl-tag">Teléfono</span>
+        <span class="cl-value">55 1155 4685</span>
+        <span class="cl-arrow">→</span>
+      </a>
+      <a class="contacto-link" href="mailto:contacto@gritaproducciones.com">
+        <span class="cl-tag">Correo</span>
+        <span class="cl-value">contacto@gritaproducciones.com</span>
+        <span class="cl-arrow">→</span>
+      </a>
+      <a class="contacto-link" href="https://api.whatsapp.com/send?phone=525511554685" target="_blank">
+        <span class="cl-tag">WhatsApp</span>
+        <span class="cl-value">+52 55 1155 4685</span>
+        <span class="cl-arrow">→</span>
+      </a>
+      <a class="contacto-link" href="https://www.instagram.com/gritaproducciones/" target="_blank">
+        <span class="cl-tag">Instagram</span>
+        <span class="cl-value">@gritaproducciones</span>
+        <span class="cl-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="contacto-right reveal">
+    <div class="form-tag">/ Escríbenos directamente</div>
+    <form class="form-story" action="https://formsubmit.co/edgar@gritaproducciones.com" method="POST">
+      <p>
+        Hola, mi nombre es
+        <input type="text" name="Nombre" placeholder="tu nombre" required />
+        y estoy buscando
+        <input type="text" name="Servicio" placeholder="fotografía, video…" class="wide" required />
+        . Me puedes contactar en
+        <input type="text" name="Contacto" placeholder="número o correo" class="wide" required />
+        .
+      </p>
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://gritaproducciones.com/">
+      <button class="btn-submit" type="submit">ENVIAR MENSAJE →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">GRITÁ PRODUCCIONES</div>
+  <div class="footer-copy">© 2025 GRITÁ PRODUCCIONES — CDMX, MÉXICO — TODOS LOS DERECHOS RESERVADOS</div>
+  <a class="footer-ig" href="https://www.instagram.com/gritaproducciones/" target="_blank">@gritaproducciones ↗</a>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => io.observe(el));
+
+  // Stagger children
+  document.querySelectorAll('.servicios-grid .servicio-card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.1}s`;
+  });
+  document.querySelectorAll('.galeria-grid .galeria-item').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.08}s`;
+  });
+</script>
+</body>
+</html>

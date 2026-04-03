@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GRITA | Producciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* VARIABLES CONSTRUCTIVISTAS */
+        :root {
+            --bg-color: #050505;
+            --text-color: #f0f0ed;
+            --accent-color: #e62020; /* Rojo Industrial */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Space Grotesk', sans-serif;
+            overflow-x: hidden;
+            cursor: crosshair; /* Cursor disruptivo */
+        }
+
+        h1, h2, h3, .nav-link, .tit h1 {
+            font-family: 'Anton', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* NAVEGACIÓN AGRESIVA */
+        .navbar {
+            border-bottom: 4px solid var(--text-color);
+            background-color: var(--bg-color);
+            padding: 1rem 0;
+        }
+        .nav-link {
+            font-size: 1.5rem;
+            color: var(--text-color) !important;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+            transform: skewX(-15deg) scale(1.1);
+            letter-spacing: 5px;
+        }
+
+        /* HERO SECTION - TIPOGRAFÍA COMO IMAGEN */
+        .hero-section {
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 10px solid var(--accent-color);
+        }
+        .hero-text-bg {
+            font-size: 18vw;
+            line-height: 0.8;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--text-color);
+            position: absolute;
+            z-index: 1;
+            white-space: nowrap;
+            transform: rotate(-5deg);
+            transition: all 0.5s ease;
+        }
+        .hero-section:hover .hero-text-bg {
+            -webkit-text-stroke: 2px var(--accent-color);
+            transform: rotate(-5deg) scale(1.05);
+            letter-spacing: -1vw;
+        }
+        
+        .caja-nosotros {
+            position: relative;
+            z-index: 2;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 3rem;
+            border: 5px solid var(--text-color);
+            max-width: 800px;
+            transform: rotate(2deg); /* Diagonal constructivista */
+            transition: transform 0.3s ease;
+        }
+        .caja-nosotros:hover {
+            transform: rotate(0deg) scale(1.02);
+            background: var(--text-color);
+        }
+
+        /* SERVICIOS - GRID BRUTALISTA */
+        .servicios-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0;
+            border: 4px solid var(--text-color);
+            margin-top: 5rem;
+        }
+        .serv-item {
+            border: 2px solid var(--text-color);
+            padding: 4rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .serv-item:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        .serv-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background-color: var(--accent-color);
+            transition: all 0.4s ease;
+            z-index: -1;
+            transform: skewX(-45deg);
+        }
+        .serv-item:hover::before {
+            left: 0;
+        }
+
+        /* FORMULARIO EXPERIMENTAL */
+        .brutal-form input {
+            background: transparent;
+            border: none;
+            border-bottom: 4px solid var(--text-color);
+            color: var(--accent-color);
+            font-size: 2rem;
+            font-family: 'Anton', sans-serif;
+            border-radius: 0;
+            outline: none;
+            width: auto;
+            max-width: 100%;
+        }
+        .brutal-form input:focus {
+            border-bottom-color: var(--accent-color);
+            background-color: rgba(255,255,255,0.05);
+        }
+        .btn-brutal {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 4px solid var(--text-color);
+            font-family: 'Anton', sans-serif;
+            font-size: 3rem;
+            text-transform: uppercase;
+            padding: 1rem 3rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            margin-top: 2rem;
+            width: 100%;
+        }
+        .btn-brutal:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translate(10px, -10px);
+            box-shadow: -10px 10px 0px var(--text-color);
+        }
+
+        /* FOOTER / CONTACTO ENLACES */
+        .contact-links a {
+            display: block;
+            border: 3px solid var(--text-color);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            color: var(--text-color);
+            text-decoration: none;
+            font-family: 'Anton', sans-serif;
+            font-size: 1.5rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .contact-links a:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <h2 style="margin:0; color:var(--text-color);">GRITA.</h2>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" style="border: 2px solid var(--text-color); border-radius: 0;">
+                <span style="color:var(--text-color); font-family: 'Anton';">MENÚ</span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="#frase1">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#servi">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#galeria">Galería</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section">
+        <div class="hero-text-bg" data-rellax-speed="-3">GRITA GRITA GRITA</div>
+        <div class="container" id="frase1">
+            <div class="caja-nosotros" data-aos="zoom-in" data-aos-duration="800">
+                <h1 style="font-size: 3rem;">SOMOS UNA PRODUCTORA 100% MEXICANA</h1>
+                <p style="font-size: 1.2rem; font-weight: bold; margin-top: 1rem;">
+                    Especializada en dar vida a tus ideas de manera creativa. Rompemos las reglas para superar las expectativas de cada uno de nuestros clientes.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5" id="servi">
+        <div class="tit text-center" data-aos="fade-up">
+            <h1 style="font-size: 5rem; text-decoration: underline var(--accent-color) 10px;">SERVICIOS</h1>
+        </div>
+        
+        <div class="servicios-grid" data-aos="fade-right">
+            <div class="serv-item"><h2>Producción</h2></div>
+            <div class="serv-item"><h2>Post-Producción</h2></div>
+            <div class="serv-item"><h2>Dirección de Arte</h2></div>
+            <div class="serv-item"><h2>Diseño Sonoro</h2></div>
+            <div class="serv-item"><h2>Animación</h2></div>
+        </div>
+    </div>
+
+    <div class="container my-5" id="galeria" data-aos="fade-up">
+        <div class="text-center mb-4">
+            <h1 style="font-size: 4rem; background: var(--text-color); color: var(--bg-color); display: inline-block; padding: 0 20px;">GALERÍA</h1>
+        </div>
+        <div class="swiper mySwiper" style="border: 5px solid var(--text-color);">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" style="height: 400px; background: #222; display: flex; align-items: center; justify-content: center;"><h2>PROYECTO 1</h2></div>
+                <div class="swiper-slide" style="height: 400px; background: #333; display: flex; align-items: center; justify-content: center;"><h2>PROYECTO 2</h2></div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="border-top: 10px solid var(--text-color); margin-top: 5rem;" id="contacto">
+        <div class="container p-5">
+            <h1 style="font-size: 4rem; color: var(--accent-color);">HABLEMOS.</h1>
+            <div class="row mt-4">
+                <div class="col-lg-8">
+                    <form action="https://formsubmit.co/edgar@gritaproducciones.com" method="POST" class="brutal-form">
+                        <p style="font-size: 1.5rem; line-height: 2.5;">
+                            ¡Hola! Mi nombre es <input type="text" name="Nombre:" required placeholder="[ TU NOMBRE ]"/>,
+                            estoy buscando <input type="text" name="¿Que busca?" required placeholder="[ LO QUE BUSCAS ]" />
+                            y me puedes contactar en <input type="text" name="Contacto:" required placeholder="[ TU NÚMERO/CORREO ]"/>.
+                        </p>
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://gritaproducciones.com/">
+                        <button class="btn-brutal" type="submit">¡GRITAR MENSAJE!</button>
+                    </form>
+                </div>
+                <div class="col-lg-4 mt-5 mt-lg-0 contact-links">
+                    <a href="tel:5511554685">TELÉFONO</a>
+                    <a href="mailto:contacto@gritaproducciones.com">CORREO</a>
+                    <a href="https://api.whatsapp.com/send?phone=525511554685" style="background: var(--accent-color); color: var(--text-color); border-color: var(--accent-color);">WHATSAPP</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script>
+        // Inicializar librerías
+        AOS.init();
+        var rellax = new Rellax('.hero-text-bg');
+        var swiper = new Swiper(".mySwiper", {
+            grabCursor: true,
+            loop: true,
+            autoplay: { delay: 2500, disableOnInteraction: false }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Gritá Producciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Unbounded:wght@400;700;900&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --k: #080808;
+  --w: #f0ede6;
+  --r: #e8190a;
+  --y: #f2c100;
+  --g: #1a1a1a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--k);
+  color: var(--w);
+  font-family: 'DM Mono', monospace;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor {
+  position: fixed;
+  width: 14px; height: 14px;
+  background: var(--r);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+#cursor.big {
+  width: 40px; height: 40px;
+  background: var(--y);
+  clip-path: polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+}
+
+/* ── NOISE ── */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events:none;
+  z-index:9998;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  z-index: 1000;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  background: var(--k);
+  border-bottom: 2px solid var(--r);
+}
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.12em;
+  color: var(--w);
+  text-decoration: none;
+  position: relative;
+}
+.nav-logo::after {
+  content: '';
+  position: absolute;
+  bottom: 2px; right: -10px;
+  width: 8px; height: 8px;
+  background: var(--r);
+  transform: rotate(45deg);
+}
+.nav-links {
+  display: flex; gap: 0; list-style: none;
+  height: 56px;
+}
+.nav-links a {
+  display: flex; align-items: center;
+  padding: 0 1.6rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #666;
+  text-decoration: none;
+  border-left: 1px solid #222;
+  transition: color 0.15s, background 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.nav-links a::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%; height: 0;
+  background: var(--r);
+  transition: height 0.2s;
+  z-index: -1;
+}
+.nav-links a:hover { color: var(--k); }
+.nav-links a:hover::before { height: 100%; }
+.nav-ig {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: #555;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-ig:hover { color: var(--y); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  padding-top: 56px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* big diagonal red slash */
+.hero-slash {
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 55%;
+  height: 130%;
+  background: var(--r);
+  transform: skewX(-8deg);
+  z-index: 0;
+}
+.hero-slash-2 {
+  position: absolute;
+  top: -10%;
+  right: 42%;
+  width: 6px;
+  height: 130%;
+  background: var(--y);
+  transform: skewX(-8deg);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4rem 2.5rem;
+}
+
+.hero-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  color: var(--y);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.hero-h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(6rem, 14vw, 16rem);
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+  color: var(--w);
+  mix-blend-mode: normal;
+  position: relative;
+}
+
+.hero-h1 .line-red {
+  color: var(--k);
+  -webkit-text-stroke: 2px var(--w);
+  display: block;
+}
+.hero-h1 .line-outline {
+  -webkit-text-stroke: 2px var(--w);
+  color: transparent;
+  display: block;
+}
+
+/* floating geo shapes */
+.geo {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+.geo-circle {
+  width: 120px; height: 120px;
+  border: 3px solid var(--y);
+  border-radius: 50%;
+  top: 15%; right: 28%;
+  animation: spin 20s linear infinite;
+}
+.geo-square {
+  width: 80px; height: 80px;
+  border: 3px solid var(--w);
+  top: 55%; right: 20%;
+  transform: rotate(25deg);
+  animation: spinr 15s linear infinite;
+}
+.geo-tri {
+  width: 0; height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid var(--y);
+  opacity: 0.7;
+  top: 72%; right: 48%;
+}
+.geo-line {
+  width: 3px; height: 200px;
+  background: var(--r);
+  top: 30%; right: 38%;
+  transform: rotate(-30deg);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spinr { to { transform: rotate(-360deg + 25deg); } }
+
+/* logo on red */
+.hero-logo-wrap {
+  position: absolute;
+  right: 4%;
+  top: 50%;
+  transform: translateY(-50%) skewX(-8deg);
+  z-index: 2;
+  width: 38%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-logo-wrap img {
+  width: 85%;
+  filter: brightness(0);
+  animation: throb 4s ease-in-out infinite;
+}
+@keyframes throb {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* bottom bar */
+.hero-bottom {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: stretch;
+  border-top: 2px solid #222;
+  background: var(--k);
+}
+.hb-item {
+  flex: 1;
+  padding: 1.2rem 2rem;
+  border-right: 1px solid #222;
+  display: flex; flex-direction: column; gap: 0.3rem;
+}
+.hb-item:last-child { border-right: none; }
+.hb-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  color: var(--r);
+  line-height: 1;
+}
+.hb-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: #555;
+  text-transform: uppercase;
+}
+
+/* ticker */
+.ticker-wrap {
+  background: var(--y);
+  overflow: hidden;
+  padding: 0.6rem 0;
+}
+.ticker-inner {
+  display: flex; gap: 3rem;
+  width: max-content;
+  animation: tick 18s linear infinite;
+}
+.ticker-inner span {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.25em;
+  color: var(--k);
+  white-space: nowrap;
+}
+.ticker-inner .sep { opacity: 0.35; }
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── NOSOTROS ── */
+#nosotros {
+  position: relative;
+  overflow: hidden;
+  padding: 8rem 2.5rem;
+  border-bottom: 2px solid #1e1e1e;
+}
+
+/* diagonal background stripe */
+#nosotros::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -5%;
+  width: 45%;
+  height: 160%;
+  background: var(--g);
+  transform: skewX(-8deg);
+  z-index: 0;
+}
+#nosotros::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    -55deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.015) 40px,
+    rgba(255,255,255,0.015) 41px
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nos-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.nos-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.3em;
+  color: var(--r);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.nos-label::before {
+  content: ''; display: block;
+  width: 40px; height: 2px;
+  background: var(--r);
+}
+
+.nos-h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 6vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+}
+.nos-h2 em {
+  font-style: normal;
+  color: var(--r);
+}
+
+.nos-text {
+  font-size: 0.95rem;
+  line-height: 2;
+  color: #888;
+  letter-spacing: 0.03em;
+}
+.nos-text strong {
+  color: var(--w);
+  font-weight: 400;
+}
+
+/* big decorative number */
+.nos-deco {
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30vw;
+  color: transparent;
+  -webkit-text-stroke: 1px #1e1e1e;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+/* ── SERVICIOS ── */
+#servicios {
+  position: relative;
+  overflow: hidden;
+}
+
+.serv-header {
+  padding: 3rem 2.5rem 2rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 1px solid #1e1e1e;
+  position: relative;
+}
+
+.serv-header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 10vw, 12rem);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+}
+/* clipped */
+.serv-header-title span {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--w);
+}
+
+.serv-header-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: #555;
+  text-align: right;
+  padding-bottom: 0.5rem;
+}
+
+/* diagonal divider between header and cards */
+.serv-diag {
+  height: 60px;
+  background: var(--r);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 60%);
+  margin-bottom: -1px;
+}
+
+.serv-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.sc {
+  padding: 2.5rem 1.8rem;
+  border-right: 1px solid #1a1a1a;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sc:last-child { border-right: none; }
+
+/* diagonal hover fill */
+.sc::before {
+  content: '';
+  position: absolute;
+  bottom: -100%; left: -10%;
+  width: 120%; height: 100%;
+  background: var(--r);
+  transform: skewY(-8deg);
+  transition: bottom 0.35s cubic-bezier(.77,0,.175,1);
+  z-index: 0;
+}
+.sc:hover::before { bottom: -5%; }
+.sc:hover { color: var(--k); }
+.sc:hover .sc-num,
+.sc:hover .sc-title,
+.sc:hover .sc-body { color: var(--k); }
+.sc:hover .sc-line { background: var(--k); }
+
+.sc > * { position: relative; z-index: 1; }
+
+.sc-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  line-height: 1;
+  color: #222;
+  transition: color 0.25s;
+}
+.sc-line {
+  width: 30px; height: 2px;
+  background: var(--r);
+  transition: background 0.25s;
+}
+.sc-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  color: var(--w);
+  transition: color 0.25s;
+}
+.sc-body {
+  font-size: 0.58rem;
+  letter-spacing: 0.12em;
+  line-height: 2;
+  color: #555;
+  text-transform: uppercase;
+  margin-top: auto;
+  transition: color 0.25s;
+}
+
+/* ── GALERIA ── */
+#galeria {
+  border-top: 2px solid #1a1a1a;
+}
+
+.gal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 2.5rem 0;
+}
+
+.gal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 7vw, 8rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+.gal-title::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 8px;
+  width: 60%;
+  height: 6px;
+  background: var(--y);
+}
+
+.gal-note {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  color: #444;
+  text-transform: uppercase;
+}
+
+.gal-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 320px 240px;
+  gap: 3px;
+  margin-top: 2rem;
+}
+
+.gi {
+  background: var(--g);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.gi:nth-child(1) { grid-column: span 5; grid-row: span 2; }
+.gi:nth-child(2) { grid-column: span 4; }
+.gi:nth-child(3) { grid-column: span 3; }
+.gi:nth-child(4) { grid-column: span 7; }
+.gi:nth-child(5) { grid-column: span 3; grid-row: span 1; }
+.gi:nth-child(6) { grid-column: span 2; }
+
+.gi-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gi-bg svg { opacity: 0.06; }
+
+/* diagonal overlay on hover */
+.gi::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--r);
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path 0.4s cubic-bezier(.77,0,.175,1);
+  z-index: 1;
+}
+.gi:hover::after {
+  clip-path: polygon(0 40%, 100% 0%, 100% 100%, 0 100%);
+}
+
+.gi-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 1.5rem;
+  z-index: 2;
+  transform: translateY(8px);
+  transition: transform 0.3s;
+}
+.gi:hover .gi-info { transform: translateY(0); }
+
+.gi-cat {
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  color: rgba(240,237,230,0.5);
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+.gi:hover .gi-cat { color: rgba(240,237,230,0.9); }
+
+.gi-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.05em;
+  color: var(--w);
+}
+
+/* ── CONTACTO ── */
+#contacto {
+  position: relative;
+  overflow: hidden;
+  padding: 8rem 2.5rem;
+  border-top: 2px solid #1a1a1a;
+}
+
+/* big diagonal red block on right */
+#contacto::before {
+  content: '';
+  position: absolute;
+  top: -10%; right: -5%;
+  width: 42%;
+  height: 120%;
+  background: var(--r);
+  transform: skewX(-6deg);
+  z-index: 0;
+}
+
+.cnt-inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.cnt-left h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 8vw, 10rem);
+  line-height: 0.88;
+  margin-bottom: 3rem;
+}
+.cnt-left h2 span { display: block; color: var(--k); }
+
+.cnt-links { display: flex; flex-direction: column; }
+
+.cl {
+  display: grid;
+  grid-template-columns: 100px 1fr 24px;
+  align-items: center;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  color: var(--w);
+  transition: padding-left 0.2s;
+  gap: 1rem;
+}
+.cl:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+.cl:hover { padding-left: 12px; color: var(--y); }
+.cl-tag { font-size: 0.55rem; letter-spacing: 0.2em; color: #555; text-transform: uppercase; }
+.cl-val { font-size: 0.9rem; letter-spacing: 0.05em; font-weight: 300; }
+.cl-arr { font-size: 0.7rem; transition: transform 0.2s; }
+.cl:hover .cl-arr { transform: translateX(4px); color: var(--y); }
+
+/* form on the right (appears on red bg) */
+.cnt-right {
+  padding: 3rem;
+  background: var(--k);
+  border-left: 4px solid var(--y);
+  position: relative;
+}
+.cnt-right::before {
+  content: '✉';
+  position: absolute;
+  top: -1.5rem; left: 2rem;
+  font-size: 2.5rem;
+  color: var(--y);
+  line-height: 1;
+}
+
+.form-hdr {
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--y);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  margin-top: 1rem;
+}
+
+.form-narrative {
+  font-size: 1rem;
+  line-height: 2.4;
+  color: var(--w);
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+}
+
+.form-narrative input[type=text] {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #444;
+  color: var(--y);
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  width: 140px;
+  padding: 0 4px 1px;
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: 0.04em;
+}
+.form-narrative input.wide { width: 200px; }
+.form-narrative input::placeholder { color: #333; }
+.form-narrative input:focus { border-color: var(--y); }
+
+.btn-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  padding: 1rem 2.5rem;
+  background: var(--y);
+  color: var(--k);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  border: none;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+.btn-send::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--r);
+  transition: left 0.3s;
+  z-index: 0;
+}
+.btn-send:hover::before { left: 0; }
+.btn-send:hover { color: var(--w); transform: skewX(-4deg); }
+.btn-send span { position: relative; z-index: 1; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--k);
+  border-top: 2px solid var(--r);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 1.2rem 2.5rem;
+  gap: 2rem;
+}
+.f-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.15em;
+  color: var(--w);
+}
+.f-logo span { color: var(--r); }
+.f-copy {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: #444;
+  text-align: center;
+  text-transform: uppercase;
+}
+.f-ig {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: #444;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.f-ig:hover { color: var(--y); }
+
+/* ── SCROLL REVEAL ── */
+.sr {
+  opacity: 0;
+  transform: translateY(40px) skewY(2deg);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.sr.on { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .hero-logo-wrap { display: none; }
+  .hero-slash { width: 30%; }
+  .nos-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .serv-cards { grid-template-columns: 1fr 1fr; }
+  .gal-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .gi:nth-child(n) { grid-column: span 1; grid-row: span 1; height: 200px; }
+  .cnt-inner { grid-template-columns: 1fr; }
+  #contacto::before { display: none; }
+  footer { grid-template-columns: 1fr; text-align: center; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">GRITÁ</a>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#galeria">Galería</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a class="nav-ig" href="https://www.instagram.com/gritaproducciones/" target="_blank">@gritaproducciones ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-slash"></div>
+  <div class="hero-slash-2"></div>
+
+  <!-- geo decorations -->
+  <div class="geo geo-circle"></div>
+  <div class="geo geo-square"></div>
+  <div class="geo geo-tri"></div>
+  <div class="geo geo-line"></div>
+
+  <!-- logo on red bg -->
+  <div class="hero-logo-wrap">
+    <img src="recursos/gritaa.jpeg" alt="Gritá Producciones" />
+  </div>
+
+  <div class="hero-content sr">
+    <div class="hero-tag">◆ Productora 100% Mexicana — CDMX — Desde siempre</div>
+    <h1 class="hero-h1">
+      <span>GRITÁ</span>
+      <span class="line-outline">PRODUCE</span>
+      <span class="line-red">CREA</span>
+    </h1>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="hb-item">
+      <div class="hb-num">100%</div>
+      <div class="hb-label">Mexicana</div>
+    </div>
+    <div class="hb-item">
+      <div class="hb-num">05</div>
+      <div class="hb-label">Servicios</div>
+    </div>
+    <div class="hb-item">
+      <div class="hb-num">∞</div>
+      <div class="hb-label">Ideas</div>
+    </div>
+    <div class="hb-item">
+      <div class="hb-num">01</div>
+      <div class="hb-label">Equipo Comprometido</div>
+    </div>
+  </div>
+
+  <div class="ticker-wrap">
+    <div class="ticker-inner">
+      <span>FOTOGRAFÍA</span><span class="sep">◆</span>
+      <span>VIDEO</span><span class="sep">◆</span>
+      <span>DISEÑO GRÁFICO</span><span class="sep">◆</span>
+      <span>BRANDING</span><span class="sep">◆</span>
+      <span>DIRECCIÓN CREATIVA</span><span class="sep">◆</span>
+      <span>FOTOGRAFÍA</span><span class="sep">◆</span>
+      <span>VIDEO</span><span class="sep">◆</span>
+      <span>DISEÑO GRÁFICO</span><span class="sep">◆</span>
+      <span>BRANDING</span><span class="sep">◆</span>
+      <span>DIRECCIÓN CREATIVA</span><span class="sep">◆</span>
+    </div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section id="nosotros">
+  <div class="nos-deco">G</div>
+  <div class="nos-inner">
+    <div class="sr">
+      <div class="nos-label">Nosotros</div>
+      <h2 class="nos-h2">DAMOS<br>VIDA A<br><em>TUS IDEAS.</em></h2>
+    </div>
+    <div class="sr">
+      <p class="nos-text">
+        Somos una productora <strong>100% mexicana</strong> especializada en transformar conceptos en piezas que gritan. Contamos con un equipo altamente capacitado y personal comprometido, dispuesto a <strong>superar las expectativas</strong> de cada uno de nuestros clientes.<br><br>
+        Desde la concepción hasta la entrega final, ejecutamos con precisión, pasión y un ojo clínico para lo extraordinario.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios">
+  <div class="serv-header sr">
+    <div class="serv-header-title">
+      SERVI<span>CIOS</span>
+    </div>
+    <div class="serv-header-sub">05 DISCIPLINAS<br>RESULTADOS SIN LÍMITE</div>
+  </div>
+
+  <div class="serv-diag"></div>
+
+  <div class="serv-cards">
+    <div class="sc sr">
+      <div class="sc-num">01</div>
+      <div class="sc-line"></div>
+      <div class="sc-title">FOTOGRAFÍA<br>COMERCIAL</div>
+      <div class="sc-body">Producto<br>Retrato de Marca<br>Editorial</div>
+    </div>
+    <div class="sc sr">
+      <div class="sc-num">02</div>
+      <div class="sc-line"></div>
+      <div class="sc-title">PRODUCCIÓN<br>DE VIDEO</div>
+      <div class="sc-body">Spots Publicitarios<br>Corporativo<br>Redes Sociales</div>
+    </div>
+    <div class="sc sr">
+      <div class="sc-num">03</div>
+      <div class="sc-line"></div>
+      <div class="sc-title">DISEÑO<br>GRÁFICO</div>
+      <div class="sc-body">Identidad Visual<br>Impresos<br>Digital</div>
+    </div>
+    <div class="sc sr">
+      <div class="sc-num">04</div>
+      <div class="sc-line"></div>
+      <div class="sc-title">ESTRATEGIA<br>CREATIVA</div>
+      <div class="sc-body">Concepto<br>Dirección de Arte<br>Campaña 360°</div>
+    </div>
+    <div class="sc sr">
+      <div class="sc-num">05</div>
+      <div class="sc-line"></div>
+      <div class="sc-title">BRANDING<br>& MARCA</div>
+      <div class="sc-body">Naming<br>Identidad<br>Manual de Marca</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA -->
+<section id="galeria">
+  <div class="gal-header sr">
+    <div class="gal-title">GALERÍA</div>
+    <div class="gal-note">Trabajos seleccionados<br>2024 — 2025</div>
+  </div>
+
+  <div class="gal-grid">
+    <div class="gi sr">
+      <div class="gi-bg">
+        <svg width="100" height="100" viewBox="0 0 100 100" fill="white">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="75" cy="25" r="10" fill="white"/>
+          <line x1="5" y1="50" x2="95" y2="50" stroke="white" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="gi-info">
+        <div class="gi-cat">Fotografía de Producto</div>
+        <div class="gi-name">CAMPAÑA PRINCIPAL</div>
+      </div>
+    </div>
+    <div class="gi sr">
+      <div class="gi-bg">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <polygon points="10,70 40,10 70,70" fill="none" stroke="white" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="gi-info">
+        <div class="gi-cat">Video</div>
+        <div class="gi-name">SPOT 30SEG</div>
+      </div>
+    </div>
+    <div class="gi sr">
+      <div class="gi-bg">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <rect x="5" y="5" width="30" height="70" rx="2" fill="white" opacity="0.6"/>
+          <rect x="45" y="20" width="30" height="55" rx="2" fill="white" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="gi-info">
+        <div class="gi-cat">Diseño</div>
+        <div class="gi-name">BRANDING COMPLETO</div>
+      </div>
+    </div>
+    <div class="gi sr">
+      <div class="gi-bg">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <path d="M40 5 L75 25 L75 55 L40 75 L5 55 L5 25 Z" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="40" cy="40" r="12" fill="white" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="gi-info">
+        <div class="gi-cat">Dirección de Arte</div>
+        <div class="gi-name">EDITORIAL 2024</div>
+      </div>
+    </div>
+    <div class="gi sr">
+      <div class="gi-bg">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <rect x="5" y="5" width="70" height="70" rx="0" fill="none" stroke="white" stroke-width="3"/>
+          <line x1="5" y1="5" x2="75" y2="75" stroke="white" stroke-width="2"/>
+          <line x1="75" y1="5" x2="5" y2="75" stroke="white" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="gi-info">
+        <div class="gi-cat">Campaña</div>
+        <div class="gi-name">ESTRATEGIA 360°</div>
+      </div>
+    </div>
+    <div class="gi sr">
+      <div class="gi-bg">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="white">
+          <circle cx="40" cy="40" r="35" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="40" cy="40" r="20" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="40" cy="40" r="5" fill="white"/>
+        </svg>
+      </div>
+      <div class="gi-info">
+        <div class="gi-cat">Social Media</div>
+        <div class="gi-name">CONTENIDO DIGITAL</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="cnt-inner">
+    <div class="cnt-left sr">
+      <h2>HABLA<br><span>MOS</span></h2>
+      <div class="cnt-links">
+        <a class="cl" href="tel:5511554685">
+          <span class="cl-tag">Teléfono</span>
+          <span class="cl-val">55 1155 4685</span>
+          <span class="cl-arr">→</span>
+        </a>
+        <a class="cl" href="mailto:contacto@gritaproducciones.com">
+          <span class="cl-tag">Correo</span>
+          <span class="cl-val">contacto@gritaproducciones.com</span>
+          <span class="cl-arr">→</span>
+        </a>
+        <a class="cl" href="https://api.whatsapp.com/send?phone=525511554685" target="_blank">
+          <span class="cl-tag">WhatsApp</span>
+          <span class="cl-val">+52 55 1155 4685</span>
+          <span class="cl-arr">→</span>
+        </a>
+        <a class="cl" href="https://www.instagram.com/gritaproducciones/" target="_blank">
+          <span class="cl-tag">Instagram</span>
+          <span class="cl-val">@gritaproducciones</span>
+          <span class="cl-arr">→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="cnt-right sr">
+      <div class="form-hdr">/ Escríbenos directamente</div>
+      <form class="form-narrative" action="https://formsubmit.co/edgar@gritaproducciones.com" method="POST">
+        <p>
+          Hola, mi nombre es&nbsp;<input type="text" name="Nombre" placeholder="tu nombre" required />&nbsp;y estoy buscando&nbsp;<input type="text" name="Servicio" placeholder="fotografía, video…" class="wide" required />.&nbsp;Me puedes contactar en&nbsp;<input type="text" name="Contacto" placeholder="número o correo" class="wide" required />.
+        </p>
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="https://gritaproducciones.com/">
+        <button class="btn-send" type="submit">
+          <span>ENVIAR MENSAJE →</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">GRITÁ<span>.</span></div>
+  <div class="f-copy">© 2025 Gritá Producciones — CDMX, México — Todos los derechos reservados</div>
+  <a class="f-ig" href="https://www.instagram.com/gritaproducciones/" target="_blank">@gritaproducciones ↗</a>
+</footer>
+
+<script>
+// Custom cursor
+const cur = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .sc, .gi').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('big'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+});
+
+// Scroll reveal
+const srs = document.querySelectorAll('.sr');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+srs.forEach((el, i) => {
+  el.style.transitionDelay = `${(i % 5) * 0.1}s`;
+  io.observe(el);
+});
+</script>
+</body>
+</html>
